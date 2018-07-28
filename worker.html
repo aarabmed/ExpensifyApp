@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+        <meta http-equiv="Content-type" content="text/html charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">    
+        <link rel="stylesheet" type="text/css" href="./public/dist/styles.css" />
+    </head>
+    <body style="-webkit-print-color-adjust:exact">
+        <script>
+            const ipcRenderer = require("electron").ipcRenderer;
+            ipcRenderer.on("printPDF", (event, content) => {
+                document.body.innerHTML = content;
+                ipcRenderer.send("readyToPrintPDF");
+            });
+        </script>
+    </body>
+</html>
