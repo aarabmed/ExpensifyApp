@@ -16,30 +16,23 @@ import 'normalize.css/normalize.css';
 import 'react-dates/lib/css/_datepicker.css';
 import './styles/styles.scss';
 
-import LoadingPage from './components/LoadingPage';
 
 
 
-const firebase = new Firebase()
-/* firebase.auth.onAuthStateChanged((user) => {
-  if (user) {
-        store.dispatch(startSetDipenses()).then(()=>{
-          store.dispatch(startSetCommands());
-                
-          if (history.location.pathname === '/login') {
-            return history.push('/dashboard');
-          } 
 
-           return history.push('/dashboard');
-        })
-     
-    } else {
-      firebase.doSignOut().then(res=>{
-        store.dispatch(logout())
-        history.push('/login');
-      });
+
+store.subscribe(() => {
+  const { auth } = store.getState()
+  if(auth.user!==null){
+    if(history.location.pathname==='/'||history.location.pathname==='/login'){
+      history.push('/dashboard')
     }
-});  */
+  }else{
+    history.push('/login')
+  }
+});
+
+
 const MOUNT_NODE = document.getElementById('app');
 
 const App =(ReactDOM.render(
