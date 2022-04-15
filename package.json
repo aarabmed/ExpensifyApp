@@ -9,14 +9,12 @@
     "node": ">=8.15.1"
   },
   "scripts": {
-    "build:dev": "webpack --watch ",
-    "build": "webpack",
-    "build:prod": "cross-env NODE_ENV=production webpack",
+    "build": "cross-env NODE_ENV=production webpack",
     "dev-server": "webpack-dev-server",
     "electron-dev": "electron .",
     "electron": "electron-packager . Expensify_app --overwrite --asar=true --platform=win32 --arch=ia32 --icon=src/assets/icons/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName='Expensify app'",
     "start": "node server/server.js",
-    "heroku-postbuild": "npm run build --build:prod && npm run start"
+    "heroku-postbuild": "npm run build --prod"
   },
   "build": {
     "appId": "come.aarabmohamed.expenseApp",
