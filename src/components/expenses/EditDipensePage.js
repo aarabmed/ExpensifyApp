@@ -1,12 +1,14 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import FormDipense from '../components/formDispense'
-import { startEditDipense } from '../actions/dipenses';
+import FormDipense from './formDispense'
+import { startEditDipense } from '../../redux/actions/dipenses';
 
 export class EditDipense extends React.Component{
     onSubmit = (dipense) => {
-        this.props.startEditDipense(this.props.dipense.id, dipense);
-        this.props.history.push('/');
+        console.log('props.match.params.id',dipense)
+        startEditDipense(this.props.match.params.id, dipense).then(()=>{
+            this.props.history.push('/dashboard');
+        })
     }
     render(){
         return (
@@ -20,9 +22,6 @@ export class EditDipense extends React.Component{
 
 const mapStateToProps = (state, props) => ({
     dipense: state.dipenses.find((dip) => dip.id === props.match.params.id)
-  });
-  const mapDispatchToProps = (dispatch, props) => ({
-    startEditDipense: (id, dipense) => dispatch(startEditDipense(id, dipense)),
-  });
+});
 
-export default connect(mapStateToProps,mapDispatchToProps)(EditDipense);
+export default connect(mapStateToProps,null)(EditDipense);

@@ -1,26 +1,21 @@
 import React from 'react';
-import configureStore from '../store/configureStore'
-import { SingleDatePicker } from 'react-dates';
-import { Upload, Icon, message, Modal ,Form, Input, Button,DatePicker,Radio,InputNumber,Checkbox,Card,Select  } from 'antd';
+
+import {Icon,Form, Input, Button,Radio,InputNumber} from 'antd';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const dateFormat = 'YYYY/MM/DD';
-const { TextArea } = Input;
-let isNum = false
-let formid=0;
-let count=1;
+
+
+
 class FormCommandPage extends React.Component {
   constructor(props){ 
     super(props)
     this.state={
       companyName:props.command? props.command.companyName:'',
-      createdAt: props.command ? moment(props.command.createdAt) : moment(),
       articleRowCount:props.command?props.command.articleRowCount:[0],
       
-      fornisseur:props.command?props.command.fornisseur:'',
       
       ArticleName:props.command?props.command.ArticleName:[''],
       NombreArticle:props.command?props.command.NombreArticle:[0],
@@ -30,27 +25,17 @@ class FormCommandPage extends React.Component {
       MontantTotal:props.command?props.command.MontantTotal:0,
       MontantValueLettres:props.command?props.command.MontantValueLettres:'',
 
-      counter:this.props.commands.length>0? this.props.commands[this.props.commands.length-1].counter:1,
       PayModeValue:props.command? props.command.PayModeValue:'espece', 
-        AccountNumValue:props.command? props.command.AccountNumValue:'',
-        payer:props.command? props.command.payer:'',
-      uuidC:props.command? props.command.uuidC :0,
-      maxRows:props.command?props.command.maxRows:undefined,
+      AccountNumValue:props.command? props.command.AccountNumValue:'',
+      payor:props.command? props.command.payor:'',
+      maxRows:props.command?props.command.maxRows:0,
       calendarFocused: false,
       edit:props.command? true : false,
-      BondCommandNum:[],
     }
   }
-  componentDidMount() {
-    this.setState({BondCommandNum:this.state.counter})
-  }
+  
   //====================================== fornisseur Functions ===================================
-      fornisseurOnChange=(e)=>{
-        const fornisseur = e.target.value
-        this.setState(()=>({
-          fornisseur
-        }))
-      }
+      
     ArticleNameOnchange=(idx)=>(e) => {
         
         const newArticleName = this.state.ArticleName.map((article, sidx) => {
@@ -139,12 +124,11 @@ class FormCommandPage extends React.Component {
   
           const { form } = this.props;
           this.setState({
-            uuidC:this.state.uuidC + 1,
+            maxRows:this.state.maxRows + 1,
             ArticleName: this.state.ArticleName.concat([this.state.ArticleName]),
             NombreArticle: this.state.NombreArticle.concat(['']),
             PrixUnitaire: this.state.PrixUnitaire.concat(['']),
             MontantArticle: this.state.MontantArticle.concat(['']),
-            BondCommandNum:this.state.BondCommandNum.concat(this.state.counter)
             //MontantTotal: this.state.MontantTotal.concat(['']),
             
              },()=>{
@@ -179,7 +163,7 @@ class FormCommandPage extends React.Component {
 
 
       this.setState({
-        uuidC:this.state.uuidC-1,
+        maxRows:this.state.maxRows-1,
         MontantTotal:this.state.MontantArticle.filter((elm,index)=>index!==k).reduce((a,b)=>a+b,0)},()=>{
         this.setState({
           articleRowCount:articleRowCount,
@@ -187,7 +171,6 @@ class FormCommandPage extends React.Component {
           NombreArticle: this.state.NombreArticle.filter((elm,index)=>index!==k),
           PrixUnitaire: this.state.PrixUnitaire.filter((elm,index)=>index!==k),
           MontantArticle: this.state.MontantArticle.filter((elm,index)=>index!==k),
-          BondCommandNum:this.state.BondCommandNum.filter((elm,index)=>index!==k) 
           })
         });
     }
@@ -213,9 +196,9 @@ class FormCommandPage extends React.Component {
       }
       
       AccountPayerOnChange=(e)=>{
-        const payer = e.target.value
+        const payor = e.target.value
         this.setState(()=>({
-          payer
+          payor
         }))
       }
 
@@ -235,11 +218,6 @@ class FormCommandPage extends React.Component {
       }
     
 
-    onDateChange = (createdAt) => {
-      if (createdAt) {
-        this.setState(() => ({ createdAt }));
-      }
-    };
 
     onFocusChange = ({ focused }) => {
       this.setState(() => ({ calendarFocused: focused }));
@@ -257,9 +235,8 @@ class FormCommandPage extends React.Component {
       if (!err) {
                 this.props.onSubmit(
                   {          
-                    counter:this.state.counter+1,
                     companyName:this.state.companyName,
-                    createdAt: this.state.createdAt.valueOf(),
+                    createdAt: moment().valueOf(),
                     articleRowCount:this.state.articleRowCount,
 
                     ArticleName:this.state.ArticleName,
@@ -269,21 +246,17 @@ class FormCommandPage extends React.Component {
                     MontantTotal:this.state.MontantTotal,
 
                     PayModeValue:this.state.PayModeValue, 
-                        AccountNumValue:this.state.AccountNumValue,
-                        payer:this.state.payer,
+                    AccountNumValue:this.state.AccountNumValue,
+                    payor:this.state.payor,
 
-                    uuidC:this.state.uuidC,
                     MontantTotal:this.state.MontantTotal,
-                    maxRows:this.state.uuidC,
-                    fornisseur:this.state.fornisseur,
+                    maxRows:this.state.maxRows,
                     MontantValueLettres:this.state.MontantValueLettres
                 })
               }
 
     
-            form.resetFields();
-            
-            
+            form.resetFields();   
       
     }); 
 
@@ -297,30 +270,7 @@ class FormCommandPage extends React.Component {
  
 
     const { getFieldDecorator, getFieldValue,setFieldsValue } = this.props.form;
-    const formItemLayout = {
-    labelCol: {
-        xs: { span: 24 },
-        sm: { span: 4 },
-    },
-    wrapperCol: {
-        xs: { span: 24 },
-        sm: { span: 15 },
-    },
-    };
-    const formItemLayoutWithOutLabel = {
-    wrapperCol: {
-        xs: { span: 24, offset: 0 },
-        sm: { span: 15, offset: 4 },
-    },
-    };
-
-     ////////////////////////////////////////////////////////////////
-
-     const gridStyle = {
-        width: '11vw',
-        textAlign: 'center',
-    };
-////////////////////////////////////////////// MODE PAIMENT ///////////////////
+    ////////////////////////////////////////////// MODE PAIMENT ///////////////////
       const payModeA=(
         <div style={{marginTop: '15px'}}>
         <label className='remislabelCommand' style={{ display:'inline-block'}}>► Autre:</label>
@@ -340,7 +290,7 @@ class FormCommandPage extends React.Component {
           <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
           <FormItem className='remisFieldCommand'>
                 {getFieldDecorator('payer', {
-                    initialValue:this.state.edit ?this.state.payer:'',
+                    initialValue:this.state.edit ?this.state.payor:'',
                     rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                 })(
                     <Input  onChange={this.AccountPayerOnChange} />
@@ -363,7 +313,7 @@ class FormCommandPage extends React.Component {
         <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
           <FormItem className='remisFieldCommand'>
                 {getFieldDecorator('payer', {
-                    initialValue:this.state.edit ?this.state.payer:'',
+                    initialValue:this.state.edit ?this.state.payor:'',
                     rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                 })(
                     <Input  onChange={this.AccountPayerOnChange} />
@@ -387,7 +337,7 @@ class FormCommandPage extends React.Component {
           <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
              <FormItem className='remisFieldCommand'>
                     {getFieldDecorator('payer', {
-                        initialValue:this.state.edit ? this.state.payer:'',
+                        initialValue:this.state.edit ? this.state.payor:'',
                         rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                     })(
                         <Input  onChange={this.AccountPayerOnChange} />
@@ -406,7 +356,7 @@ class FormCommandPage extends React.Component {
        </div>
       )
         
-       //====================================================form section fornisseur=========== 
+       //====================================================Article section =========== 
        getFieldDecorator('Ckeys', {initialValue:this.state.articleRowCount});
       
         const Ckeys = getFieldValue('Ckeys');
@@ -509,46 +459,11 @@ class FormCommandPage extends React.Component {
                                   placeholder="Nom de personne ou d'entreprise" 
                                   style={{width: '35%', height: '40px'}}/>
                     )}     
-              </FormItem>
-              <FormItem  
-              style={{width:'100%',margin:'0px',margin: '0px' ,marginBottom:'9%'}}
-              className="inputFormFornis"
-              required={false}>
-                  {getFieldDecorator('fornisseur', {
-                    validateTrigger: ['onChange', 'onBlur'],
-                    rules: [{
-                      required: true,
-                      whitespace: true,
-                      message: "Svp! saisie un nom de fornisseur valide",
-                    }],})(      
-                      <Input size="large" 
-                                onChange={this.fornisseurOnChange}
-                                placeholder="Nom de fornisseur" 
-                                style={{width: '35%', height: '40px'}}/>
-                  )}     
-            </FormItem>
-              
-            
-              <div style={{    
-                position: 'absolute',
-                top: '15vh',
-                right: '39px',
-                width: '15vw'}}>
-               {this.state.edit? null : <p style={{ width: '85%', display:'block' }}>ID : {this.state.counter+count}</p>}
-               <label style={{display:'inline-block', marginRight:'7%'}}>Date:</label>
-                  <SingleDatePicker
-                  date={this.state.createdAt}
-                  onDateChange={this.onDateChange}
-                  focused={this.state.calendarFocused}
-                  onFocusChange={this.onFocusChange}
-                  numberOfMonths={1}
-                  isOutsideRange={() => false}
-                />
-              </div>
+              </FormItem> 
                 <div style={{margin:'2.5vh auto 1vh'}}>{article}</div>
                 <div style={{width:'100%'}}>                       
                       <label className="fontzise" style={{ width:'27%', display:'inline-block',marginLeft:'13%'}}>► Montant en chiffres:</label>
-                              <InputNumber min={0} max={100000000000000000000}  value={this.state.MontantTotal}  style={{width:'60%'}} disabled/>
+                              <InputNumber min={0} max={100000000000}  value={this.state.MontantTotal}  style={{width:'60%'}} disabled/>
                       <label className="fontzise montantLettreInput" style={{marginTop:'10px',width:'27%', display:'inline-block',marginLeft:'13%'}}>► Montant en lettres :</label>       
                       <Input  className="inputFormFornis" value={this.state.MontantValueLettres} placeholder="Montant en lettres" style={{width:'60%' , display:'inline-block', margin: 'unset' }} disabled />
                          
@@ -578,7 +493,7 @@ class FormCommandPage extends React.Component {
 const mapStateToProps = (state,props) => {
   
   return {
-    commands: state.commands,
+    commandes: state.commandes,
     }  
 };
 const FormCommand = Form.create()(FormCommandPage);

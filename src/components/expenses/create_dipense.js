@@ -1,7 +1,7 @@
 import React from 'react';
 import FormDispense from './formDispense'
 import { connect } from 'react-redux';
-import { startAddDipense,addDipense } from '../actions/dipenses';
+import { startAddDipense,addDipense } from '../../redux/actions/dipenses';
 
 
 
@@ -9,7 +9,7 @@ export class CreatePage extends React.Component {
     
     onSubmit = (dipense) => {
       this.props.startAddDipense(dipense);
-       this.props.history.push('/');
+       this.props.history.push('/dashboard');
     };
     render() {
       return (

@@ -21,7 +21,7 @@ export default (state = commandReducerDefaultState, action) => {
           };
         });
       case 'SET_COMMANDS':
-        return action.commands;
+        return action.commandes;
     default: return state;
   }
 }

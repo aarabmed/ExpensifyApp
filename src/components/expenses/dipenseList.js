@@ -1,20 +1,16 @@
 import React from 'react';
-import {Select,List, Avatar, Button, Spin, Dropdown, Icon,Menu,Collapse,Modal,Table, Divider,Card,Checkbox   } from 'antd';
+import {Select,List, Avatar, Button,Icon,Collapse,Modal,Table, Divider,Card,Checkbox   } from 'antd';
 import { connect } from 'react-redux';
-import  selectdipenses from '../selectors/dipenses'
-import DipenseChart from '../components/dipenseChart'
+import  selectdipenses from '../../redux/selectors/dipenses'
+import DipenseChart from './dipenseChart'
 import { Link } from 'react-router-dom';
-//import reqwest from 'reqwest';
-import configureStore from '../store/configureStore';
-import {startRemoveDipense } from '../actions/dipenses';
+import {startRemoveDipense } from '../../redux/actions/dipenses';
 import moment from 'moment';
-
-const ipcRenderer = require("electron").ipcRenderer;
+//const ipcRenderer = require("electron").ipcRenderer;
 
 const Option = Select.Option;
 const confirm = Modal.confirm;
 let x = 0;
-let isIframe = true;
 const CheckboxGroup = Checkbox.Group;
 class DipenseList extends React.Component {
     constructor(props){
@@ -256,6 +252,7 @@ class DipenseList extends React.Component {
     addOne=()=>{
       this.setState({count:this.state.count+1})
     }
+
     displayBenificitaire=(item)=>{
       if(item.isClient){
         return 'Clients'
@@ -270,7 +267,7 @@ class DipenseList extends React.Component {
       }
     }
     ///// THIS FUNCTION TRIGER PRINT OPTION ON MODE WEB ////////
-  /*     trigetPinter=()=>{ 
+    trigetPinter=()=>{ 
         isIframe = false;
         var DocumentContainer = document.getElementById('divtoprint').outerHTML
         var launcherHTML = ` 
@@ -298,15 +295,16 @@ class DipenseList extends React.Component {
             WindowObject.close();
         },2000)
     }
- */
-    sendCommandToWorker=(content)=>{
+ 
+    /* sendCommandToWorker=(content)=>{
        ipcRenderer.send("printPDF", content);
-    }
+    } */
 
     printDipense=()=>{
       // send whatever you like
       const container = document.getElementById('divtoprint').innerHTML
-      this.sendCommandToWorker(container);
+      //this.sendCommandToWorker(container);
+      this.trigetPinter()
     }
 
     selectFiltredItem1=(value)=>{
@@ -342,6 +340,7 @@ class DipenseList extends React.Component {
         title: 'Total du montant',
         dataIndex: 'total',
       }];
+      
       const Totaldata = [{
         key: '1',
         number:this.state.filterTable.length===0 ? this.props.dipenses.length : 
@@ -385,83 +384,80 @@ class DipenseList extends React.Component {
       }];
 
       const columnsClient = [{
+          title: 'Name',
+          dataIndex: 'name',
+          key: 'name',
+      },{
+        title: 'P.J',
+        dataIndex: 'PJ',
+        key: 'PJ',
+      },{
+        title: 'Q.J',
+          dataIndex: 'QJ',
+          key: 'QJ',
+      },{
+        title: 'Montant',
+          dataIndex: 'montant',
+          key: 'montant',
+      }];
+      
+      const columnsAutre = [{
         title: 'Name',
         dataIndex: 'name',
         key: 'name',
-    },{
-      title: 'P.J',
-      dataIndex: 'PJ',
-      key: 'PJ',
-    },{
-      title: 'Q.J',
-        dataIndex: 'QJ',
-        key: 'QJ',
-    },{
-      title: 'Montant',
-        dataIndex: 'montant',
-        key: 'montant',
-    }];
-    
-    const columnsAutre = [{
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-    },{
-      title: 'Discription',
-      dataIndex: 'DESCRIPTION',
-      key: 'DESCRIPTION',
-    },{
-        title: 'Montant',
-        dataIndex: 'montant',
-        key: 'montant',
-    }];
-    /////////////////////// VISA TABLE /////////////////////////
-    const columnsVisa = [{
-      title: 'Directeur',
-      dataIndex: 'directeur',
-      className: 'visaColumn',
-    }, {
-      title: 'Client',
-      dataIndex: 'client',
-      className: 'visaColumn',
+      },{
+        title: 'Discription',
+        dataIndex: 'DESCRIPTION',
+        key: 'DESCRIPTION',
+      },{
+          title: 'Montant',
+          dataIndex: 'montant',
+          key: 'montant',
+      }];
+      /////////////////////// VISA TABLE /////////////////////////
+      const columnsVisa = [{
+        title: 'Directeur',
+        dataIndex: 'directeur',
+        className: 'visaColumn',
+      }, {
+        title: 'Client',
+        dataIndex: 'client',
+        className: 'visaColumn',
 
-    }, {
-      title: 'Caissière',
-      dataIndex: 'caissiere',
-      className: 'visaColumn',
+      }, {
+        title: 'Caissière',
+        dataIndex: 'caissiere',
+        className: 'visaColumn',
 
-    }];
+      }];
 
-    const dataVisa = [{
-      key: '1',
-      name: '',
-      money: '',
-      address: '',
-    }];
-    const text = `
-                  A dog is a type of domesticated animal.
-                  Known for its loyalty and faithfulness,
-                  it can be found as a welcome guest in many households across the world.
-                `;
-    const customPanelStyle = {
-      background: 'rgb(231, 230, 230)',
-      borderRadius: 4,
-      marginBottom: 24,
-      border: 0,
-      overflow: 'hidden',
-      width:'100%'
-    };
+      const dataVisa = [{
+        key: '1',
+        name: '',
+        money: '',
+        address: '',
+      }];
+      const text = `
+                    A dog is a type of domesticated animal.
+                    Known for its loyalty and faithfulness,
+                    it can be found as a welcome guest in many households across the world.
+                  `;
+      const customPanelStyle = {
+        background: 'rgb(231, 230, 230)',
+        borderRadius: 4,
+        marginBottom: 24,
+        border: 0,
+        overflow: 'hidden',
+        width:'100%'
+      };
     //===========================================================
 
       const Panel = Collapse.Panel;
-      let isIframe= true;
-      const number = 1
-      const {dipenses}=this.props
-      const {loading, data} = this.state;      
+      console.log('user:',this.props.user)
       return (
        
         <div className="pageContainer">
-           <div className="listeContainer">
+          <div className="listeContainer">
               <div>
                 <Collapse bordered={false}>
                   <Panel header="Filtrer les Résultats" key="1" style={customPanelStyle} className='filtersHeader'>
@@ -523,11 +519,11 @@ class DipenseList extends React.Component {
                            this.state.filterTable.includes(el.benificType)||
                            this.state.filterTable.includes(el.ChantierValue)||
                            this.state.filterTable.includes(el.Responsable)
-                  })}
+                })}
                 renderItem={item=> (
-                  <List.Item actions={[<a onClick={()=>this.triger(item)}>...plus</a>, <Link to={`/edit/${item.id}`} >Editer</Link>, <a onClick={()=>this.showConfirm(item,this.props)}>suprimer</a>]}>
+                  <List.Item actions={this.props.user.isAdmin?[<a onClick={()=>this.triger(item)}>...plus</a>, <Link to={`/edit/${item.id}`} >Editer</Link>, <a onClick={()=>this.showConfirm(item,this.props)}>suprimer</a>]:[<a onClick={()=>this.triger(item)}>...plus</a>, <Link to={`/edit/${item.id}`} >Editer</Link>]}>
                     <List.Item.Meta
-                      avatar={<Avatar src={item.avatar} icon={item.avatar===''?"user":null}  className="myAvatar" />}
+                      
                       title={<a onClick={()=>this.triger(item)}>Bon dipense N°: {
                         item.counter
                       }
@@ -546,8 +542,7 @@ class DipenseList extends React.Component {
                         <p style={{marginBottom:'0',marginTop:'5px'}}>Crée le :<span style={{fontSize:'1.3rem',marginLeft:'5px',color:'#ee4c4c'}}>
                         {moment(item.createdAt).format('YYYY/MM/DD')}</span></p>
                         </div>
-                      }
-                        
+                      }   
                       />                     
                    
                   </List.Item>
@@ -693,10 +688,10 @@ class DipenseList extends React.Component {
                     /> 
                   </div>
                 </Modal>
-                </div>
-                <Table className="totalTable" columns={Totalcolumns} dataSource={Totaldata} pagination={false} size="small"/>
-            </div>         
-          <DipenseChart alldipenes={this.props.allDipense}/>
+              </div>
+              <Table className="totalTable" columns={Totalcolumns} dataSource={Totaldata} pagination={false} size="small"/>
+          </div>         
+           <DipenseChart currentUser={this.props.user} alldipenes={this.props.allDipense}/> 
         </div>
       )
     }
@@ -704,6 +699,7 @@ class DipenseList extends React.Component {
   
   const mapStateToProps = (state) => {
     return {
+      user:state.auth.user,
       dipenses:selectdipenses(state.dipenses, state.filters),
       allDipense:state.dipenses
     };

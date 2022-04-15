@@ -1,7 +1,7 @@
 import React from 'react';
 import FormCommande from './formCommand'
 import { connect } from 'react-redux';
-import { startAddCommand } from '../actions/commands';
+import { startAddCommand } from '../../redux/actions/commands';
 
 
 
@@ -9,7 +9,7 @@ export class CreatePage extends React.Component {
     
     onSubmit = (command) => {
       this.props.startAddCommand(command);
-       this.props.history.push('/');
+       this.props.history.push('/dashboard');
     };
     render() {
       return (

@@ -1,80 +1,78 @@
 const path = require('path');
 const webpack = require('webpack');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
-if (process.env.NODE_ENV === 'test') {
-  require('dotenv').config({ path: '.env.test' });
-} else if (process.env.NODE_ENV === 'development') {
-  require('dotenv').config({ path: '.env.development' });
-}
+
+require('dotenv').config();
+
+
+const htmlPlugin = new HtmlWebpackPlugin({
+  template: './public/index.html',
+  filename: "./index.html"
+});
+
+const miniCssPlugin = new MiniCssExtractPlugin(
+  // chunk version for cache refresh
+  // filename: 'style.[contentHash].css',
+);
 
 module.exports = (env) => {
   const isProduction = env === 'production';
-  const CSSExtract = new ExtractTextPlugin('styles.css');
-  optimization: {
-    minimizer: [
-      new UglifyJsPlugin()
-    ]
-  }
+
   return {
-    target:"electron-renderer",
+    target:"web",
     entry: ['babel-polyfill', './src/app.js'],
     output: {
-      path: path.join(__dirname, 'public','dist'),
-      publicPath: '/dist/',
-      filename: 'bundle.js',
-      
+      path: path.resolve(__dirname, 'dist'),
+      // hashing for cache refresh
+      // filename: 'main.[chunkHash].js',
+      filename: '[name].js',
+      publicPath: "/"
     },
-    
     module: {
-      rules: [{
-        loader: 'babel-loader',
-        test: /\.js$/, 
-        exclude: /node_modules/,
-        },
-              {
-              test: /\.s?css$/,
-              use: CSSExtract.extract({
-                publicPath: './',
-                use: [
-                  {
-                    loader: 'css-loader',
-                    options: {
-                      sourceMap: true
-                    },
-                  },
-                  {
-                    loader: 'sass-loader',
-                    options: {
-                      sourceMap: true
-                    }
-                  },
-                ]
-              }),             
-            },
-            {
-              test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
-              use: 'url-loader',
-            }
-        ,   
-      
-      ]
+    rules: [{
+      loader: 'babel-loader',
+      test: /\.(js|jsx)$/, 
+      exclude: /node_modules/,
+      },
+      {test: /\.s?css$/,
+        use: [
+          MiniCssExtractPlugin.loader, 
+          'css-loader', 
+          'sass-loader'
+        ]
+      },
+      {
+        test: /\.(?:ico|gif|png|jpg|jpeg|webp)$/,
+        use: 'url-loader',
+      }
+      ,   
+    
+    ]
+    },
+    optimization: {
+      splitChunks: {
+        chunks: 'all',
+      },
     },
     plugins: [
-      CSSExtract,
-     // new UglifyJSPlugin({ uglifyOptions: { ...options } })
-      // new webpack.DefinePlugin({
-      //   'process.env.NODE_ENV': JSON.stringify('development')
-      // }) 
+      new webpack.HotModuleReplacementPlugin(), // Tell webpack we want hot reloading
+      htmlPlugin,
+      miniCssPlugin,
+      new webpack.DefinePlugin({
+        'process.env': JSON.stringify(process.env)      
+      })
     ],
     
     devtool: isProduction ? 'source-map' : 'inline-source-map',
     devServer: {
-      contentBase: path.join(__dirname, 'public'),
+
+      port: 9000,
+      compress: true,
       historyApiFallback: true,
-      publicPath: '/dist/'
     }
   };
 };

@@ -1,38 +1,33 @@
 
-import database from '../firebase/firebase';
-import uuid from 'uuid';
+import Firebase from '../../firebase/';
 
 
-
+const firebase = new Firebase()
 export const addCommand = (command) => ({
   type: 'ADD_COMMAND',
   command
 });
-export const startAddCommand = (commandData = {}) => {
+export const startAddCommand = (commande) => {
   return (dispatch) => {
-    const {
+    /* const {
       companyName,
       createdAt = 0, 
       articleRowCount,
-      fornisseur='',
       ArticleName=[],
       NombreArticle=[],
       PrixUnitaire=[],
       MontantArticle=[],
       MontantTotal=0,
       MontantValueLettres='',
-      BondCommandNum=[],
-      counter=1,
       PayModeValue,
       AccountNumValue='',
-      payer, 
+      payor, 
       uuidC=0,
       maxRows,
 
     } = commandData;
 
     const command = { 
-      fornisseur,
       companyName,
       createdAt, 
       articleRowCount,
@@ -42,19 +37,17 @@ export const startAddCommand = (commandData = {}) => {
       MontantArticle,
       MontantTotal,
       MontantValueLettres,
-      counter,
       PayModeValue,
       AccountNumValue,
-      payer, 
+      payor, 
       uuidC,
       maxRows,
-      BondCommandNum 
       };
-
-    return database.ref('commands').push(command).then((ref) => {
+ */
+    return database.ref('commands').push(commande).then((ref) => {
       dispatch(addCommand({
         id: ref.key,
-        ...command
+        ...commande
       }));
     });
   };
@@ -63,15 +56,15 @@ export const startAddCommand = (commandData = {}) => {
 
 
 // REMOVE_COMMAND ===============================================
-export const removeCommand = ({ id } = {}) => ({
+export const removeCommande = ({ id } = {}) => ({
   type: 'REMOVE_COMMAND',
   id
 });
 
 export const startRemoveCommand = ({ id } = {}) => {
   return (dispatch) => {
-    return database.ref(`commands/${id}`).remove().then(() => {
-      dispatch(removeCommand({ id }));
+    return firebase.removeCommande(id).then(() => {
+      dispatch(removeCommand({id}));
     });
   };
 };
@@ -86,31 +79,22 @@ export const editCommand = (id, updates) => ({
 
 export const startEditCommand = (id, updates) => {
   return (dispatch) => {
-    return database.ref(`commands/${id}`).update(updates).then(() => {
-      dispatch(editCommand(id, updates));
+    return firebase.updateCommande(id,updates).then((res) => {
+      dispatch(editCommand(res.id, res.commande));
     });
   };
 };
 
 // SET_EXPENSES
-export const setCommands = (commands) => ({
+export const setCommands = (commandes) => ({
 type: 'SET_COMMANDS',
-commands
+commandes
 });
 
 export const startSetCommands = () => {
 return (dispatch) => {
-  return database.ref('commands').once('value').then((snapshot) => {
-    const commands = [];
-
-    snapshot.forEach((childSnapshot) => {
-      commands.push({
-        id: childSnapshot.key,
-        ...childSnapshot.val()
-      });
-    });
-
-    dispatch(setCommands(commands));
+  return firebase.fetchCommandes().then(res=> {
+    dispatch(setCommands(res));
   });
 };
 };

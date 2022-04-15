@@ -1,12 +1,11 @@
 
-import database from '../firebase/firebase';
-import uuid from 'uuid';
+import Firebase from '../../firebase/';
+import { store } from '../store/configureStore';
+
+const {dispatch} = store
 
 
-
-
-
-
+const firebase = new Firebase()
 
 //ADD_DIPENSE
 export const addDipense = (dipense) => ({
@@ -14,35 +13,35 @@ export const addDipense = (dipense) => ({
     dipense
   });
 
-  export const startAddDipense = (dipenseData = {}) => {
-    return (dispatch) => {
-      const {
-        createdAt = 0,
-        companyNameInitial='',
-        ArticleName=[],
-        FornisNames='',
-        FornisNumNBS='',
-        FornisPHS=[],
-        FornisQUS=[],
-        FornisMontants=[],
-        ClientNames=[],
-        ClientPjs=[],
-        ClientQjs=[],
-        ClientMontants=[],
-        Responsable='',
-        AccountNumValue='',
-        PayModeValue='espece',
-        MontantValueLettres='',
-        MontantTotal=0,
-        RemiseValue='',
-        LibValue='',
-        ChantierValue='',
+  export const startAddDipense = (dipense) => {
+    return async () => {
+      /* const {
+        createdAt,
+        companyNameInitial,
+        ArticleName,
+        FornisNames,
+        FornisNumNBS,
+        FornisPHS,
+        FornisQUS,
+        FornisMontants,
+        ClientNames,
+        ClientPjs,
+        ClientQjs,
+        ClientMontants,
+        Responsable,
+        AccountNumValue,
+        PayModeValue,
+        MontantValueLettres,
+        MontantTotal,
+        RemiseValue,
+        LibValue,
+        ChantierValue,
         ClientType,
-        counter=1,
-        CaisseObserv='',
-        FornisRowCount=[],
-        ClientRowCount=[],
-        avatar='',
+        counter,
+        CaisseObserv,
+        FornisRowCount,
+        ClientRowCount,
+        avatar,
         isFornisseur=false,
         isClient=false,
         isEmployer=false,
@@ -55,12 +54,12 @@ export const addDipense = (dipense) => ({
         benificType='',
         CompanyName='',
         avatarOrText='text',
-        payer='',
+        payor='',
         cardTitle='Benificitaire'
 
       } = dipenseData;
-
-      const dipense = { 
+ */
+     /*  const dipense = { 
         companyNameInitial, 
         createdAt,
         counter,
@@ -99,16 +98,12 @@ export const addDipense = (dipense) => ({
         benificType,
         avatarOrText,
         CompanyName,
-        payer,
+        payor,
         cardTitle
-      };
+      }; */
   
-      return database.ref('dipenses').push(dipense).then((ref) => {
-        dispatch(addDipense({
-          id: ref.key,
-          ...dipense
-        }));
-      });
+      const res = await firebase.createExpense(dipense);
+      dispatch(addDipense(res));
     };
   };
 
@@ -121,8 +116,8 @@ export const removeDipense = ({ id } = {}) => ({
   });
 
   export const startRemoveDipense = ({ id } = {}) => {
-    return (dispatch) => {
-      return database.ref(`dipenses/${id}`).remove().then(() => {
+    return () => {
+      return firebase.removeExpense(id).the(() => {
         dispatch(removeDipense({ id }));
       });
     };
@@ -136,12 +131,11 @@ export const editDipense = (id, updates) => ({
     updates
   });
 
-  export const startEditDipense = (id, updates) => {
-    return (dispatch) => {
-      return database.ref(`dipenses/${id}`).update(updates).then(() => {
-        dispatch(editDipense(id, updates));
+  export const  startEditDipense = async (id, updates) => {
+    console.log('RESS-EDIT:',updates, '----id',id)
+      return await firebase.updateExpense(id,updates).then((res) => {
+        dispatch(editDipense(res.id, res.dipense));
       });
-    };
   };
 
   // SET_EXPENSES
@@ -151,18 +145,9 @@ export const setDipenses = (dipenses) => ({
 });
 
 export const startSetDipenses = () => {
-  return (dispatch) => {
-    return database.ref('dipenses').once('value').then((snapshot) => {
-      const dipenses = [];
-
-      snapshot.forEach((childSnapshot) => {
-        dipenses.push({
-          id: childSnapshot.key,
-          ...childSnapshot.val()
-        });
-      });
-
-      dispatch(setDipenses(dipenses));
-    });
+  return () => {
+    return firebase.fetchExpenses().then(res=>{
+      dispatch(setDipenses(res));
+    })
   };
 };

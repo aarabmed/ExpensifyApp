@@ -61,3 +61,19 @@
     padding-left: $s-size;
   }
 }
+
+
+.search-bar{
+  .ant-input-search-button {
+    height: 36px;
+  }
+
+  .DateRangePickerInput__showClearDates {
+    padding-right: 15px;
+  }
+
+  .DateInput_input {
+    padding: 1px 10px 1px;
+    line-height: 31px;
+  }
+}

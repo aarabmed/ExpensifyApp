@@ -1,8 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { DateRangePicker } from 'react-dates';
-import { setTextFilter, setStartDate, setEndDate } from '../actions/filters';
+import { setTextFilter, setStartDate, setEndDate } from '../../redux/actions/filters';
 import { Input } from 'antd';
+
+import 'react-dates/initialize';
+import 'react-dates/lib/css/_datepicker.css';
 
 const Search = Input.Search;
 class DipenseListFilters extends React.Component {
@@ -30,12 +33,12 @@ class DipenseListFilters extends React.Component {
  
   render() {
     return (
-      <div>
+      <div className='search-bar'>
        <Search
         placeholder="recheche dipense(s)"
         value={this.props.filters.text}
         onChange={this.onTextChange}
-        style={{width: '27.6%'}}
+        style={{width: '27vw'}}
         />
    
         <DateRangePicker
@@ -44,9 +47,12 @@ class DipenseListFilters extends React.Component {
           onDatesChange={this.onDatesChange}
           focusedInput={this.state.calendarFocused}
           onFocusChange={this.onFocusChange}
+          
           showClearDates={true}
           numberOfMonths={1}
           isOutsideRange={() => false}
+          startDateId="start"
+          endDateId="end"
         />
       </div>
     );
