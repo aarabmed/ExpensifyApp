@@ -453,7 +453,7 @@ class DipenseList extends React.Component {
     //===========================================================
 
       const Panel = Collapse.Panel;
-      console.log('user:',this.props.user)
+      console.log('user:',this.props)
       return (
        
         <div className="pageContainer">

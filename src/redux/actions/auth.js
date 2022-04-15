@@ -10,7 +10,7 @@ export const login = (user) => ({
 
 export const LoggedIn=(user,callback)=>{
     dispatch(login(user));
-    Promise.all([startSetDipenses,startSetCommands]).then(callback())
+    Promise.all([startSetDipenses(),startSetCommands()]).then(callback())
 }
 
 export const logout = () => ({
