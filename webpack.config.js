@@ -2,6 +2,7 @@ const path = require('path');
 const {DefinePlugin,HashedModuleIdsPlugin,HotModuleReplacementPlugin} = require('webpack');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const OfflinePlugin = require('offline-plugin');
 const WebpackPwaManifest = require('webpack-pwa-manifest');
 const TerserPlugin = require('terser-webpack-plugin');
 const CompressionPlugin = require('compression-webpack-plugin');
@@ -15,7 +16,8 @@ require('dotenv').config();
 
 const htmlPlugin = new HtmlWebpackPlugin({
   template: './public/index.html',
-  filename: "./index.html"
+  filename: "./index.html",
+  favicon: "./public/images/favicon.ico"
 });
 
 const miniCssPlugin = new MiniCssExtractPlugin(
