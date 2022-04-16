@@ -52,9 +52,8 @@ type: 'SET_COMMANDS',
 commandes
 });
 
-export const startSetCommands = async () => {
-  return firebase.fetchCommandes().then(res=> {
+export const startSetCommands = firebase.fetchCommandes()
+  .then(res=> {
     console.log('Commands:',res)
     return dispatch(setCommands(res));
   });
-};

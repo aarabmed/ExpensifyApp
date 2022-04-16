@@ -54,9 +54,9 @@ export const setDipenses = (dipenses) => ({
   dipenses
 });
 
-export const startSetDipenses = async () => {
-    return firebase.fetchExpenses().then(res=>{
+export const startSetDipenses = firebase.fetchExpenses().then(
+    res=>{
       console.log('dispenses:',res)
       dispatch(setDipenses(res));
-    })
-};
+    }
+)
