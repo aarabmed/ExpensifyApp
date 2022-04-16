@@ -289,7 +289,7 @@ class FormCommandPage extends React.Component {
         <div style={{marginTop: '15px'}}>
           <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
           <FormItem className='remisFieldCommand'>
-                {getFieldDecorator('payer', {
+                {getFieldDecorator('payor', {
                     initialValue:this.state.edit ?this.state.payor:'',
                     rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                 })(
@@ -312,7 +312,7 @@ class FormCommandPage extends React.Component {
         <div style={{marginTop: '15px'}}>
         <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
           <FormItem className='remisFieldCommand'>
-                {getFieldDecorator('payer', {
+                {getFieldDecorator('payor', {
                     initialValue:this.state.edit ?this.state.payor:'',
                     rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                 })(
@@ -336,7 +336,7 @@ class FormCommandPage extends React.Component {
         <div style={{marginTop: '15px'}}>
           <label className='remislabelCommand' style={{display:'inline-block'}}>► Payeur:</label>
              <FormItem className='remisFieldCommand'>
-                    {getFieldDecorator('payer', {
+                    {getFieldDecorator('payor', {
                         initialValue:this.state.edit ? this.state.payor:'',
                         rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
                     })(

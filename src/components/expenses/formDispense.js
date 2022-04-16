@@ -190,15 +190,6 @@ class FormDispensePage extends React.Component {
         Fkeys: Fkeys.filter(key => key !== k),
       })
       
-      /* const newValue = this.state.FornisRowCount.filter((elm,index)=>index!==k)
-      const FornisRowCount= newValue.map((elm,index)=>{
-            if(elm===index){
-              return elm
-            }
-            else{
-              return elm-1
-            }  
-        }) */
       
 
 
@@ -616,7 +607,7 @@ class FormDispensePage extends React.Component {
               let Fname=this.props.commands[i].fornisseur;
               let BondC=this.props.commands[i].counter
               let MontantArt=this.props.commands[i].MontantArticle
-              let payer=this.props.commands[i].payer
+              let payor=this.props.commands[i].payor
               let AccountNum=this.props.commands[i].AccountNumValue
               this.setState({
                 FornisRowCount:this.state.FornisRowCount.slice(NewKeys.length).concat(NewKeys),
@@ -629,7 +620,7 @@ class FormDispensePage extends React.Component {
                 FornisQUS:this.state.FornisQUS.slice(NewKeys.length).concat(NombreArt).filter((el)=>el!==''&&el!==0),
                 FornisName:Fname,
                 FornisNumNBS:BondC,
-                payer:payer,
+                payor:payor,
                 AccountNumValue:AccountNum,
                 FornisMontants:this.state.FornisMontants.slice(NewKeys.length).concat(MontantArt).filter((el)=>el!==''&&el!==0),
                 },()=>this.setState({
@@ -653,22 +644,7 @@ class FormDispensePage extends React.Component {
       //==========================================================
 
       const { getFieldDecorator, getFieldValue } = this.props.form;
-      const formItemLayout = {
-        labelCol: {
-          xs: { span: 24 },
-          sm: { span: 4 },
-        },
-        wrapperCol: {
-          xs: { span: 24 },
-          sm: { span: 15 },
-        },
-      };
-      const formItemLayoutWithOutLabel = {
-        wrapperCol: {
-          xs: { span: 24, offset: 0 },
-          sm: { span: 15, offset: 4 },
-        },
-      };
+      
   
 
       const payModeA=(
@@ -736,7 +712,7 @@ class FormDispensePage extends React.Component {
         <div style={{marginTop: '15px'}}>
           <label className='remislabel' style={{display:'inline-block'}}>► Payeur:</label>
           <FormItem className='remisField'>
-          {getFieldDecorator('payer', {
+          {getFieldDecorator('payor', {
             initialValue:this.state.payor,
             rules: [{ required: true, message: 'Svp, entrez un nom de payeur valide!' , whitespace: true }]
           })(

@@ -9,7 +9,6 @@ import { Select } from 'antd';
 
 
 const { Html,Text } = Guide;
-var math = require('mathjs');
 const Option = Select.Option;
 
 class DipenseChart extends React.Component{
@@ -26,7 +25,6 @@ class DipenseChart extends React.Component{
             countActionnaire:props.alldipenes.filter(dipense=>dipense.isActionnaire).map(dipense=>dipense.ClientNames.length).reduce((a,b)=>a+b,0),
             countEmploye:props.alldipenes.filter(dipense=>dipense.isEmploye).map(dipense=>dipense.ClientNames.length).reduce((a,b)=>a+b,0),
             countAutre:props.alldipenes.filter(dipense=>dipense.isAutre).map(dipense=>dipense.ClientNames.length).reduce((a,b)=>a+b,0),
-
         }
 
     }
