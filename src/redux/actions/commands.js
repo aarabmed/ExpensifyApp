@@ -54,6 +54,5 @@ commandes
 
 export const startSetCommands = firebase.fetchCommandes()
   .then(res=> {
-    console.log('Commands:',res)
     return dispatch(setCommands(res));
   });

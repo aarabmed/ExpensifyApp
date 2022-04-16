@@ -56,7 +56,6 @@ export const setDipenses = (dipenses) => ({
 
 export const startSetDipenses = firebase.fetchExpenses().then(
     res=>{
-      console.log('dispenses:',res)
       dispatch(setDipenses(res));
     }
 )

@@ -239,7 +239,6 @@ class DipenseList extends React.Component {
         },
 
         onCancel() {
-          console.log('Cancel');
         },
       });
     }  
@@ -453,7 +452,6 @@ class DipenseList extends React.Component {
     //===========================================================
 
       const Panel = Collapse.Panel;
-      console.log('user:',this.props)
       return (
        
         <div className="pageContainer">

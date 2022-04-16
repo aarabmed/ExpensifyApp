@@ -5,7 +5,6 @@ import { startEditDipense } from '../../redux/actions/dipenses';
 
 export class EditDipense extends React.Component{
     onSubmit = (dipense) => {
-        console.log('props.match.params.id',dipense)
         startEditDipense(this.props.match.params.id, dipense).then(()=>{
             this.props.history.push('/dashboard');
         })

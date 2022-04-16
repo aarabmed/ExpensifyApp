@@ -652,7 +652,6 @@ class FormDispensePage extends React.Component {
 
       //==========================================================
 
-      console.log('PROPS:',this.props)
       const { getFieldDecorator, getFieldValue } = this.props.form;
       const formItemLayout = {
         labelCol: {

@@ -151,13 +151,13 @@ class CommandList extends React.Component {
         <div className="CommandpageContainer">
            <div className="CommandlisteContainer">
                 {data.length!=0?<div className='headerListCmd'>
-                  <Button type="danger" onClick={this.onRemove} 
+                  {this.props.user.isAdmin?<Button type="danger" onClick={this.onRemove} 
                           style={{
                             height: '28px',
                             borderRadius:'unset',
                             marginBottom: '4px'
                           }}
-                  >Suprimer</Button>
+                  >Suprimer</Button>:null}
                   <label style={{marginLeft:'8px'}}>Check All</label>
                   <input style={{marginLeft:'25px',position:'relative',top:'3px'}} type="checkbox" onChange={this.checkAll}/>
                 </div>:null}
@@ -328,7 +328,8 @@ class CommandList extends React.Component {
   const mapStateToProps = (state) => {
     return {
       commandes:state.commandes,
-      dipenses:state.dipenses
+      dipenses:state.dipenses,
+      user:state.auth.user
     };
   };
   const mapDispatchToProps=(dispatch,props)=>({
